@@ -27,22 +27,50 @@ btn.addEventListener('click',(e)=> {
     window.location.replace("./login.html")
 });
 
+const chaList = document.querySelector('.characList');
+const searchL = document.querySelector('.input');
 
-const elSearch = document.querySelector('#search');
-
-elSearch.addEventListener('keyup', (e)=> {
-    if(e.keyCode === 13) {
-        if(e.target.value === "") {
-            alert("error")
-        }
-        else {
-            foden.innerHTML = "";
-            search = e.target.value.trim()
-        }
-    }
+searchL.addEventListener('onkeyup', (e)=> {
+    console.log(e.target.value);
 })
 
+const loadCHar = async () => {
+    try{
+        const res = await fetch("https://www.googleapis.com/books/v1/volumes?q=search+terms");
+        let hpcha = await res.json();
+        displayCHa(hpcha)
+        console.log(hpcha);
+    }catch (err) {
+        console.log(err);
+    }
+};
 
+const displayCHa = (characters) => {
+    const htmls = characters
+    .map((characters) => {
+        return `
+        <div class="foden">
+        <div class="takoy-big">
+            <img class="imgde" src="${dog.items[i].volumeInfo.imageLinks.smallThumbnail}" alt="">
+            <div class="plar">
+            <p class="php">${dog.items[i].volumeInfo.title}</p>
+            <p>${dog.items[i].volumeInfo.authors}</p>
+            <p>${dog.items[i].volumeInfo.publishedDate}</p>
+            </div>
+            <div class="bttn">
+                <button class="btn1">Bookmark</button>
+                <button class="btn2">More Info</button>
+            </div>
+            <button class="btn3">Read</button>
+        </div>
+    </div>
+        `
+    })
+    .join('');
+    chaList.innerHTML = htmls
+}
+
+loadCHar
 
 async function getResponse(){
     let data = await fetch("https://www.googleapis.com/books/v1/volumes?q=${search.toLowerCase}+terms")
